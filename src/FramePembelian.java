@@ -1,11 +1,10 @@
-
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Dzikri Alif A
+ * dzikrialif99@gmail.com
+ * Quiz 2 PBO
  */
 
 /**
@@ -47,7 +46,6 @@ public class FramePembelian extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quiz 2 Pemrograman Berbasis Objek");
@@ -78,8 +76,11 @@ public class FramePembelian extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        kodeBarangText.setEnabled(false);
+
         barangComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Barang", "Gula", "Kopi", "Susu" }));
         barangComboBox.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        barangComboBox.setEnabled(false);
         barangComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 barangComboBoxActionPerformed(evt);
@@ -87,6 +88,7 @@ public class FramePembelian extends javax.swing.JFrame {
         });
 
         jumlahBarangText.setToolTipText("");
+        jumlahBarangText.setEnabled(false);
 
         newBUTTON.setText("New");
         newBUTTON.addActionListener(new java.awt.event.ActionListener() {
@@ -186,12 +188,10 @@ public class FramePembelian extends javax.swing.JFrame {
         jMenu1.setText("Menu");
 
         jMenu3.setText("Keluar");
+        jMenu3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jMenu1.add(jMenu3);
 
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -216,11 +216,7 @@ public class FramePembelian extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBUTTONActionPerformed
-        kodeBarangText.setText("");
-        barangComboBox.setSelectedIndex(0);
-        jumlahBarangText.setText("");
-        
-        
+        nonaktif();
     }//GEN-LAST:event_cancelBUTTONActionPerformed
 
     private void saveBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBUTTONActionPerformed
@@ -250,29 +246,34 @@ public class FramePembelian extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteBUTTONActionPerformed
 
     private void newBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBUTTONActionPerformed
-   
         if (!newBUTTON.isSelected()) {
-            addBUTTON.setEnabled(true);
-            deleteBUTTON.setEnabled(true);
-            saveBUTTON.setEnabled(true);
-            cancelBUTTON.setEnabled(true);
+            aktif();
         }
     }//GEN-LAST:event_newBUTTONActionPerformed
-    private String pilihBarang(){
-        BarangInfo bi = new BarangInfo();
-        if (barangComboBox.equals("Kopi")) {
-            bi.setHarga(10000);
-        }else if(barangComboBox.equals("Susu")){
-            bi.setHarga(20000);
-        }else{
-            bi.setHarga(5000);
-        }
-        return pilihBarang();
+
+    private void aktif(){
+        // enable button & textField
+        addBUTTON.setEnabled(true);
+        deleteBUTTON.setEnabled(true);
+        saveBUTTON.setEnabled(true);
+        cancelBUTTON.setEnabled(true);
+        //-------------------------------------
+        jumlahBarangText.setEnabled(true);
+        kodeBarangText.setEnabled(true);
+        barangComboBox.setEnabled(true);
+    }
+    private void nonaktif(){
+        // disable button & textField
+        addBUTTON.setEnabled(false);
+        deleteBUTTON.setEnabled(false);
+        saveBUTTON.setEnabled(false);
+        cancelBUTTON.setEnabled(false);
+        //-------------------------------------
+        jumlahBarangText.setEnabled(false);
+        kodeBarangText.setEnabled(false);
+        barangComboBox.setEnabled(false);
     }
     
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -314,7 +315,6 @@ public class FramePembelian extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
