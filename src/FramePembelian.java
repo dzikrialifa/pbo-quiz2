@@ -1,3 +1,7 @@
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,6 +18,7 @@ public class FramePembelian extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
     public FramePembelian() {
+        
         initComponents();
     }
 
@@ -75,18 +80,52 @@ public class FramePembelian extends javax.swing.JFrame {
 
         barangComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Barang", "Gula", "Kopi", "Susu" }));
         barangComboBox.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        barangComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barangComboBoxActionPerformed(evt);
+            }
+        });
 
         jumlahBarangText.setToolTipText("");
 
         newBUTTON.setText("New");
+        newBUTTON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newBUTTONActionPerformed(evt);
+            }
+        });
 
-        addBUTTON.setText("Add");
+        addBUTTON.setText("Tambah");
+        addBUTTON.setEnabled(false);
+        addBUTTON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBUTTONActionPerformed(evt);
+            }
+        });
 
-        deleteBUTTON.setText("Delete");
+        deleteBUTTON.setText("Hapus");
+        deleteBUTTON.setEnabled(false);
+        deleteBUTTON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBUTTONActionPerformed(evt);
+            }
+        });
 
-        saveBUTTON.setText("Save");
+        saveBUTTON.setText("Simpan");
+        saveBUTTON.setEnabled(false);
+        saveBUTTON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBUTTONActionPerformed(evt);
+            }
+        });
 
         cancelBUTTON.setText("Cancel");
+        cancelBUTTON.setEnabled(false);
+        cancelBUTTON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelBUTTONActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -112,10 +151,10 @@ public class FramePembelian extends javax.swing.JFrame {
                             .addComponent(kodeBarangText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(deleteBUTTON, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-                            .addComponent(addBUTTON, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(newBUTTON, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                            .addComponent(deleteBUTTON, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(newBUTTON, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addBUTTON, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,6 +215,61 @@ public class FramePembelian extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cancelBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBUTTONActionPerformed
+        kodeBarangText.setText("");
+        barangComboBox.setSelectedIndex(0);
+        jumlahBarangText.setText("");
+        
+        
+    }//GEN-LAST:event_cancelBUTTONActionPerformed
+
+    private void saveBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBUTTONActionPerformed
+        BarangInfo binfo = new BarangInfo();
+        binfo.setJumlahBarang(jumlahBarangText.getText()); // mengambil nilai dari jum
+        // proses pemilihan barang
+        Object barangItem = barangComboBox.getSelectedItem();
+        binfo.setPilihItem((barangItem != null ) ? barangItem.toString() : null );
+        
+        JOptionPane.showMessageDialog(this, binfo);
+    }//GEN-LAST:event_saveBUTTONActionPerformed
+
+    private void addBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBUTTONActionPerformed
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+   
+        model.addRow(new Object[]{barangComboBox.getSelectedItem().toString() ,jumlahBarangText.getText()});
+        
+    }//GEN-LAST:event_addBUTTONActionPerformed
+
+    private void barangComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barangComboBoxActionPerformed
+ 
+    }//GEN-LAST:event_barangComboBoxActionPerformed
+
+    private void deleteBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBUTTONActionPerformed
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.removeRow(jTable1.getSelectedRow());
+    }//GEN-LAST:event_deleteBUTTONActionPerformed
+
+    private void newBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBUTTONActionPerformed
+   
+        if (!newBUTTON.isSelected()) {
+            addBUTTON.setEnabled(true);
+            deleteBUTTON.setEnabled(true);
+            saveBUTTON.setEnabled(true);
+            cancelBUTTON.setEnabled(true);
+        }
+    }//GEN-LAST:event_newBUTTONActionPerformed
+    private String pilihBarang(){
+        BarangInfo bi = new BarangInfo();
+        if (barangComboBox.equals("Kopi")) {
+            bi.setHarga(10000);
+        }else if(barangComboBox.equals("Susu")){
+            bi.setHarga(20000);
+        }else{
+            bi.setHarga(5000);
+        }
+        return pilihBarang();
+    }
+    
     /**
      * @param args the command line arguments
      */

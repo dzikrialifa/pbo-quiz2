@@ -107,13 +107,13 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="deleteBUTTON" alignment="0" pref="78" max="32767" attributes="0"/>
-                              <Component id="addBUTTON" alignment="0" max="32767" attributes="0"/>
+                              <Component id="deleteBUTTON" alignment="0" pref="90" max="32767" attributes="0"/>
                               <Component id="newBUTTON" max="32767" attributes="0"/>
+                              <Component id="addBUTTON" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -223,6 +223,9 @@
               <Color id="Default Cursor"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="barangComboBoxActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -236,26 +239,45 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="New"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newBUTTONActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="addBUTTON">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Add"/>
+            <Property name="text" type="java.lang.String" value="Tambah"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addBUTTONActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="deleteBUTTON">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Delete"/>
+            <Property name="text" type="java.lang.String" value="Hapus"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteBUTTONActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="saveBUTTON">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Save"/>
+            <Property name="text" type="java.lang.String" value="Simpan"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveBUTTONActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="cancelBUTTON">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cancel"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelBUTTONActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
