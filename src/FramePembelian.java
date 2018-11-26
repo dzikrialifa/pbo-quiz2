@@ -1,6 +1,11 @@
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import javax.swing.DefaultComboBoxModel;
 /*
  * Dzikri Alif A
  * dzikrialif99@gmail.com
@@ -13,10 +18,19 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FramePembelian extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NewJFrame
-     */
+    private int id = 0;
+    private String kode;
+    private DefaultTableModel dtmodel;
+    private DefaultComboBoxModel dcbModel;
+    private ArrayList<Item> belanja = new ArrayList<>();
+    
+    
     public FramePembelian() {
+        Price model = new Price();
+        this.dcbModel = new DefaultComboBoxModel<> (model.getNama().toArray());
+        
+        TabelItem models = new TabelItem();
+        this.dtmodel = new DefaultTableModel(models.getNamaKolom(), 0);
         
         initComponents();
     }
@@ -34,7 +48,7 @@ public class FramePembelian extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelList = new javax.swing.JTable();
         kodeBarangText = new javax.swing.JTextField();
         barangComboBox = new javax.swing.JComboBox<>();
         jumlahBarangText = new javax.swing.JTextField();
@@ -45,7 +59,7 @@ public class FramePembelian extends javax.swing.JFrame {
         cancelBUTTON = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        menuKeluar = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quiz 2 Pemrograman Berbasis Objek");
@@ -57,8 +71,8 @@ public class FramePembelian extends javax.swing.JFrame {
 
         jLabel2.setText("Jenis Barang");
 
-        jTable1.setBackground(new java.awt.Color(153, 204, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelList.setBackground(new java.awt.Color(153, 204, 255));
+        tabelList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -74,7 +88,7 @@ public class FramePembelian extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelList);
 
         kodeBarangText.setEnabled(false);
 
@@ -187,9 +201,14 @@ public class FramePembelian extends javax.swing.JFrame {
 
         jMenu1.setText("Menu");
 
-        jMenu3.setText("Keluar");
-        jMenu3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jMenu1.add(jMenu3);
+        menuKeluar.setText("Keluar");
+        menuKeluar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        menuKeluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuKeluarActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuKeluar);
 
         jMenuBar1.add(jMenu1);
 
@@ -218,60 +237,169 @@ public class FramePembelian extends javax.swing.JFrame {
     private void cancelBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBUTTONActionPerformed
         nonaktif();
     }//GEN-LAST:event_cancelBUTTONActionPerformed
-
-    private void saveBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBUTTONActionPerformed
-        BarangInfo binfo = new BarangInfo();
-        binfo.setJumlahBarang(jumlahBarangText.getText()); // mengambil nilai dari jum
-        // proses pemilihan barang
-        Object barangItem = barangComboBox.getSelectedItem();
-        binfo.setPilihItem((barangItem != null ) ? barangItem.toString() : null );
+    
+    private void newTransaksi(){
         
-        JOptionPane.showMessageDialog(this, binfo);
+    }
+    
+    private boolean isDuplicate(String nama){
+        boolean hasil = false;
+        ArrayList<String> item = new ArrayList<>();
+        for (int i = 0; i < dtmodel.getRowCount(); i++) {
+            item.add(dtmodel.getValueAt(i, 0).toString());
+        }
+        for (String index : item) {
+            if (index.equals(nama)) {
+                hasil = true;
+            }
+        }
+        return hasil;
+    }
+    
+    private boolean isEmpty(){
+        return this.tabelList.getModel().getRowCount() <= 0;
+    }
+    
+    
+    private void saveBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBUTTONActionPerformed
+        try {
+            for (int i = 0; i < dtmodel.getRowCount(); i++) {
+                // menyimpan nama barang dan jumlah 
+                String nama = dtmodel.getValueAt(i, 0).toString();
+                float harga = new Float(dtmodel.getValueAt(i, 1).toString()) ;
+                int jumlah  = new Integer(dtmodel.getValueAt(i, 2).toString());
+                this.belanja.add(new Item(nama, harga, jumlah));
+            }
+            // instansiasi class Transaksi dengan kode dan comitted belanja
+            Transaksi trnsksi = new Transaksi(this.kode, this.belanja);
+            StringBuilder sbuilder = new StringBuilder();
+            
+            sbuilder.append(trnsksi.Pembayaran());
+            
+            JOptionPane.showMessageDialog(this, sbuilder, "Transaksi", JOptionPane.INFORMATION_MESSAGE);
+            newTransaksi();
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
+        
     }//GEN-LAST:event_saveBUTTONActionPerformed
 
     private void addBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBUTTONActionPerformed
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-   
-        model.addRow(new Object[]{barangComboBox.getSelectedItem().toString() ,jumlahBarangText.getText()});
+        
+        String nama = this.barangComboBox.getSelectedItem().toString();
+        
+        int jumlah = new Integer(this.jumlahBarangText.getText());
+        
+        if (!isDuplicate(nama)) {
+            
+        } else {
+        }
         
     }//GEN-LAST:event_addBUTTONActionPerformed
 
     private void barangComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barangComboBoxActionPerformed
  
+        
     }//GEN-LAST:event_barangComboBoxActionPerformed
 
     private void deleteBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBUTTONActionPerformed
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        model.removeRow(jTable1.getSelectedRow());
+        DefaultTableModel model = (DefaultTableModel)tabelList.getModel();
+        model.removeRow(tabelList.getSelectedRow());
     }//GEN-LAST:event_deleteBUTTONActionPerformed
 
     private void newBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBUTTONActionPerformed
-        if (!newBUTTON.isSelected()) {
-            aktif();
-        }
+        aktif();
+        this.kodeBarangText.setText(this.setKode());
+        
     }//GEN-LAST:event_newBUTTONActionPerformed
-
+    public static String now(){
+        String DATE_FORMAT_NOW = "yyMMdd";
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        return sdf.format(cal.getTime());
+    
+    }
+    private void menuKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuKeluarActionPerformed
+        Object option[] = {"Ya", "TIdak"};
+        int result = JOptionPane.showOptionDialog(this, 
+                "Apakah anda ingin keluar ?", "Konfirmasi", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null,option,option[1] );
+        if (result == JOptionPane.YES_OPTION) {
+            System.exit(0);
+            
+        }
+    }//GEN-LAST:event_menuKeluarActionPerformed
+    
+    // -- penambahan id / kode barang
+    private void tambahkodeId(){
+        this.id += 1;
+    }
+    // -- penambahan id / kode barang
+    private void kurangkodeId(){
+        this.id -= 1;
+    }
+    // --
+    private String setKode(){
+        this.tambahkodeId();
+        // -- setting tanggal
+        String date = new SimpleDateFormat("yyMMdd").format(new Date());
+        this.kode = String.format(date + "%02d", this.id);
+        return kode;
+    }
+    private Object[] addItem(String nama,int jumlah){
+        float harga = 0;
+        Price item = new Price();
+        for (int i = 0; i < item.getNama().size() ; i++) {
+            if (nama.equalsIgnoreCase(item.getNama().get(i))) {
+                harga = item.getHarga().get(i);
+            }
+        }
+        Object[] objek = { nama,harga,jumlah,};
+        return objek;
+    }
+    
+    private void updateJumlah(String nama,int tambah){
+        ArrayList<String> item = new ArrayList<>();
+        
+    }
+    
     private void aktif(){
         // enable button & textField
+        newBUTTON.setEnabled(false);
         addBUTTON.setEnabled(true);
         deleteBUTTON.setEnabled(true);
         saveBUTTON.setEnabled(true);
         cancelBUTTON.setEnabled(true);
         //-------------------------------------
+        jumlahBarangText.setText("1");
         jumlahBarangText.setEnabled(true);
-        kodeBarangText.setEnabled(true);
+        kodeBarangText.setEnabled(false);
         barangComboBox.setEnabled(true);
     }
     private void nonaktif(){
         // disable button & textField
+        newBUTTON.setEnabled(true);
         addBUTTON.setEnabled(false);
         deleteBUTTON.setEnabled(false);
         saveBUTTON.setEnabled(false);
         cancelBUTTON.setEnabled(false);
         //-------------------------------------
         jumlahBarangText.setEnabled(false);
+        jumlahBarangText.setText("");
         kodeBarangText.setEnabled(false);
+        kodeBarangText.setText("");
         barangComboBox.setEnabled(false);
+        barangComboBox.setSelectedIndex(0);
+        DefaultTableModel model = (DefaultTableModel) tabelList.getModel();
+        while (model.getRowCount() > 0 ) {            
+            for (int i = 0; i < model.getRowCount(); i++) {
+                model.removeRow(i);
+            }
+        }
+        
     }
     
     public static void main(String args[]) {
@@ -315,14 +443,14 @@ public class FramePembelian extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jumlahBarangText;
     private javax.swing.JTextField kodeBarangText;
+    private javax.swing.JMenu menuKeluar;
     private javax.swing.JButton newBUTTON;
     private javax.swing.JButton saveBUTTON;
+    private javax.swing.JTable tabelList;
     // End of variables declaration//GEN-END:variables
 }
