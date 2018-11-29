@@ -8,45 +8,48 @@ import java.util.*;
 *   Hawlet Packard
 */
 public class Item extends FramePembelian{
-    private String nama;
-    private float harga;
-    private int jumlah;
     
-    public Item() {
+    private String nama; // untuk menyimpan nilai String dari variable nama
+    private float harga; // untuk menyimpan nilai float dari variable harga
+    private int jumlah; // untuk menyimpan nilai int dari vaiable jumlah
+    
+    public Item() { // default konstruktor
     }
 
-    public Item(String nama, float harga, int jumlah) {
+    public Item(String nama, int jumlah, float harga) {
         this.nama = nama;
-        this.harga = harga;
         this.jumlah = jumlah;
+        this.harga = harga;
     }
 
-    public void setNama(String nama) {
+    public void setNama(String nama) { // SETTER NAMA
         this.nama = nama;
     }
-    public String getNama() {
+    public String getNama() { // GETTER NAMA
         return nama;
     }
-
-    public void setHarga(float harga) {
+    
+    public void setHarga(float harga) { // SETTER HARGA
         this.harga = harga;
     }
-    public float getHarga() {
+    public float getHarga() { // GETTER HARGA
          return harga;
     }
     
-    public void setJumlah(int jumlah) {
+    public void setJumlah(int jumlah) { // SETTER JUMLAH
         this.jumlah = jumlah;
     }
-    public int getJumlah() {
+    public int getJumlah() { // GETTER JUMLAH
         return jumlah;
     }
     
-    
+    // -------------------------------------------
     public float getTotal(){
         return this.harga * this.jumlah;
+        // MERETURNKAN NILAI HARGA * JUMLAH 
     }
     public String toString(){
         return this.nama;
+        
     }
 }   
