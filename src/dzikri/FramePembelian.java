@@ -271,7 +271,6 @@ public class FramePembelian extends javax.swing.JFrame {
                 String nama = dtmodel.getValueAt(i, 0).toString();
                 float harga = new Float(dtmodel.getValueAt(i, 1).toString()) ;
                 int jumlah  = new Integer(dtmodel.getValueAt(i, 2).toString());
-                this.belanja.add(new Item(nama, harga, jumlah));
             }
             // instansiasi class Transaksi dengan kode dan comitted belanja
             Transaksi trnsksi = new Transaksi(this.kode, this.belanja);
