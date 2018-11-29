@@ -6,11 +6,13 @@ package dzikri;
 *   Hawlet Packard
 */
 import java.util.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 public class Transaksi {
-    private final String kode;
-    private ArrayList<Item> items = new ArrayList<>();
-    private float total;
+    
+    private final String kode; // variable untuk menampilkan kode pembayaran
+    private ArrayList<Item> items = new ArrayList<>(); // menampilkan list item didalam ArrayList
+    private float total; // untuk menyimpan nilai float dari variable harga
 
     
     // ---- konstruktor dari class Transaksi
