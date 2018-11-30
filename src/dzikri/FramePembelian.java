@@ -1,14 +1,11 @@
 package dzikri;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
+import dzikri.*;
 /*
  * Dzikri Alif A
  * dzikrialif99@gmail.com
@@ -21,16 +18,16 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class FramePembelian extends javax.swing.JFrame {
 
-    private int id = 0;
-    private String kode;
-    private DefaultTableModel dtmodel;
-    private DefaultComboBoxModel dcbModel;
-    private ArrayList<Item> belanja = new ArrayList<>();
+    private int id = 0; // setting variable id untuk kode transaksi
+    private String kode; // setting kode variable untuk kode transaksi
+    private DefaultTableModel dtmodel; // model tabel
+    private DefaultComboBoxModel dcbModel; // combo box model
+    private ArrayList<Item> belanja = new ArrayList<>(); // variable untuk menampilkan daftar transaksi
     
     
     public FramePembelian() {
-        Price model = new Price();
-        this.dcbModel = new DefaultComboBoxModel<> (model.getNama().toArray());
+        PriceComboModel model = new PriceComboModel();
+        this.dcbModel = new DefaultComboBoxModel<> (model.getNamaItem().toArray());
         
         TabelItem models = new TabelItem();
         this.dtmodel = new DefaultTableModel(models.getNamaKolom(), 0);
@@ -50,19 +47,16 @@ public class FramePembelian extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabelList = new javax.swing.JTable();
         kodeBarangText = new javax.swing.JTextField();
-        barangComboBox = new javax.swing.JComboBox<>();
         jumlahBarangText = new javax.swing.JTextField();
         newBUTTON = new javax.swing.JButton();
         addBUTTON = new javax.swing.JButton();
         deleteBUTTON = new javax.swing.JButton();
         saveBUTTON = new javax.swing.JButton();
         cancelBUTTON = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        menuKeluar = new javax.swing.JMenu();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableitemlist = new javax.swing.JTable();
+        barangComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quiz 2 Pemrograman Berbasis Objek");
@@ -74,35 +68,7 @@ public class FramePembelian extends javax.swing.JFrame {
 
         jLabel2.setText("Jenis Barang");
 
-        tabelList.setBackground(new java.awt.Color(153, 204, 255));
-        tabelList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nama Barang", "Harga Barang", "Jumlah Barang"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tabelList);
-
         kodeBarangText.setEnabled(false);
-
-        barangComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Barang", "Gula", "Kopi", "Susu" }));
-        barangComboBox.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        barangComboBox.setEnabled(false);
-        barangComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                barangComboBoxActionPerformed(evt);
-            }
-        });
 
         jumlahBarangText.setToolTipText("");
         jumlahBarangText.setEnabled(false);
@@ -114,7 +80,7 @@ public class FramePembelian extends javax.swing.JFrame {
             }
         });
 
-        addBUTTON.setText("Tambah");
+        addBUTTON.setText("Add");
         addBUTTON.setEnabled(false);
         addBUTTON.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,7 +88,7 @@ public class FramePembelian extends javax.swing.JFrame {
             }
         });
 
-        deleteBUTTON.setText("Hapus");
+        deleteBUTTON.setText("Delete");
         deleteBUTTON.setEnabled(false);
         deleteBUTTON.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,7 +96,7 @@ public class FramePembelian extends javax.swing.JFrame {
             }
         });
 
-        saveBUTTON.setText("Simpan");
+        saveBUTTON.setText("Save");
         saveBUTTON.setEnabled(false);
         saveBUTTON.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,6 +111,12 @@ public class FramePembelian extends javax.swing.JFrame {
                 cancelBUTTONActionPerformed(evt);
             }
         });
+
+        tableitemlist.setModel(this.dtmodel);
+        jScrollPane2.setViewportView(tableitemlist);
+
+        barangComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gula", "Kopi", "Susu" }));
+        barangComboBox.setSelectedIndex(-1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -161,19 +133,21 @@ public class FramePembelian extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelBUTTON, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(barangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
+                                .addComponent(barangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(100, 100, 100)
                                 .addComponent(jumlahBarangText))
-                            .addComponent(kodeBarangText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(kodeBarangText, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(deleteBUTTON, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                             .addComponent(newBUTTON, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(addBUTTON, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,36 +160,23 @@ public class FramePembelian extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(barangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jumlahBarangText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
+                    .addComponent(jumlahBarangText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(barangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
                         .addComponent(addBUTTON)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteBUTTON))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveBUTTON)
                     .addComponent(cancelBUTTON))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(219, Short.MAX_VALUE))
         );
-
-        jMenu1.setText("Menu");
-
-        menuKeluar.setText("Keluar");
-        menuKeluar.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        menuKeluar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuKeluarActionPerformed(evt);
-            }
-        });
-        jMenu1.add(menuKeluar);
-
-        jMenuBar1.add(jMenu1);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -224,27 +185,26 @@ public class FramePembelian extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBUTTONActionPerformed
-        nonaktif();
+        TransaksiBaru();
+        this.kurangkodeId();
     }//GEN-LAST:event_cancelBUTTONActionPerformed
     
-    private void newTransaksi(){
-        
-    }
     
+    // -- mengecek jika ada item double yang dipilih pada item sebelumnya
     private boolean isDuplicate(String nama){
         boolean hasil = false;
         ArrayList<String> item = new ArrayList<>();
@@ -259,8 +219,37 @@ public class FramePembelian extends javax.swing.JFrame {
         return hasil;
     }
     
+    // -- mengecek table apakah kosong
     private boolean isEmpty(){
-        return this.tabelList.getModel().getRowCount() <= 0;
+        return this.tableitemlist.getModel().getRowCount() <= 0;
+    }
+    
+    
+    // -- disable button remove dan save jika table kosong
+    private void belanja(){
+        if (isEmpty()) {
+            this.saveBUTTON.setEnabled(false);
+            this.deleteBUTTON.setEnabled(false);
+        } else {
+            this.saveBUTTON.setEnabled(true);
+            this.deleteBUTTON.setEnabled(true);
+        }
+    }
+    
+    
+    // -- dapat melakukan transaksi baru jika sudah menyelesaikan transaksi 
+    private void TransaksiBaru(){
+        this.jumlahBarangText.setText(" ");
+        this.kodeBarangText.setText(" ");
+        this.newBUTTON.setEnabled(true);
+        this.saveBUTTON.setEnabled(false);
+        this.cancelBUTTON.setEnabled(false);
+        this.addBUTTON.setEnabled(false);
+        this.deleteBUTTON.setEnabled(false);
+        this.jumlahBarangText.setEnabled(false);
+        this.barangComboBox.setEnabled(false);
+        this.dtmodel.setRowCount(0);
+        this.belanja.clear();
     }
     
     
@@ -279,7 +268,7 @@ public class FramePembelian extends javax.swing.JFrame {
             sbuilder.append(trnsksi.Pembayaran());
             
             JOptionPane.showMessageDialog(this, sbuilder, "Transaksi", JOptionPane.INFORMATION_MESSAGE);
-            newTransaksi();
+            TransaksiBaru();
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -291,28 +280,37 @@ public class FramePembelian extends javax.swing.JFrame {
     private void addBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBUTTONActionPerformed
         
         String nama = this.barangComboBox.getSelectedItem().toString();
-        
         int jumlah = new Integer(this.jumlahBarangText.getText());
-        
         if (!isDuplicate(nama)) {
-            
+            updateJumlah(nama, jumlah);
         } else {
+            dtmodel.addRow(addItem(nama, jumlah));
         }
+        this.belanja();
         
     }//GEN-LAST:event_addBUTTONActionPerformed
 
-    private void barangComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barangComboBoxActionPerformed
- 
-        
-    }//GEN-LAST:event_barangComboBoxActionPerformed
-
     private void deleteBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBUTTONActionPerformed
-        DefaultTableModel model = (DefaultTableModel)tabelList.getModel();
-        model.removeRow(tabelList.getSelectedRow());
+        if (tableitemlist.getSelectedRow() < 0) {
+            String menu = "Pilih item yang mau dihapus";
+            JOptionPane.showMessageDialog(this, menu, "Informasi",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // jika ada baris yang dipilih
+            int jumlah = tableitemlist.getSelectedRows().length;
+            for (int i = 0; i < jumlah; i++) {
+                dtmodel.removeRow(tableitemlist.getSelectedRow());
+            }
+        }
+        this.belanja();
     }//GEN-LAST:event_deleteBUTTONActionPerformed
 
     private void newBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBUTTONActionPerformed
-        aktif();
+        this.jumlahBarangText.setText("1");
+        this.newBUTTON.setEnabled(false);
+        this.cancelBUTTON.setEnabled(true);
+        this.addBUTTON.setEnabled(true);
+        this.jumlahBarangText.setEnabled(true);
+        this.barangComboBox.setEnabled(true);
         this.kodeBarangText.setText(this.setKode());
         
     }//GEN-LAST:event_newBUTTONActionPerformed
@@ -322,18 +320,7 @@ public class FramePembelian extends javax.swing.JFrame {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
     
-    }
-    private void menuKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuKeluarActionPerformed
-        Object option[] = {"Ya", "TIdak"};
-        int result = JOptionPane.showOptionDialog(this, 
-                "Apakah anda ingin keluar ?", "Konfirmasi", 
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null,option,option[1] );
-        if (result == JOptionPane.YES_OPTION) {
-            System.exit(0);
-            
-        }
-    }//GEN-LAST:event_menuKeluarActionPerformed
+    }    
     
     // -- penambahan id / kode barang
     private void tambahkodeId(){
@@ -343,7 +330,9 @@ public class FramePembelian extends javax.swing.JFrame {
     private void kurangkodeId(){
         this.id -= 1;
     }
-    // --
+    
+    
+    // -- fungsi untuk setting code
     private String setKode(){
         this.tambahkodeId();
         // -- setting tanggal
@@ -353,56 +342,31 @@ public class FramePembelian extends javax.swing.JFrame {
     }
     private Object[] addItem(String nama,int jumlah){
         float harga = 0;
-        Price item = new Price();
-        for (int i = 0; i < item.getNama().size() ; i++) {
-            if (nama.equalsIgnoreCase(item.getNama().get(i))) {
-                harga = item.getHarga().get(i);
+        PriceComboModel item = new PriceComboModel();
+        for (int i = 0; i < item.getNamaItem().size() ; i++) {
+            if (nama.equalsIgnoreCase(item.getNamaItem().get(i))) {
+                harga = item.getHargaItem().get(i);
             }
         }
         Object[] objek = { nama,harga,jumlah,};
         return objek;
     }
     
-    private void updateJumlah(String nama,int tambah){
+    
+    // --- fungsi untuk update jumlah 
+    private void updateJumlah(String nama,int add){
         ArrayList<String> item = new ArrayList<>();
-        
+        for (int i = 0; i < dtmodel.getRowCount(); i++) {
+            item.add(dtmodel.getValueAt(i, 0).toString());
+        }
+        for (int i = 0; i < item.size(); i++) {
+            if (item.get(i).equals(nama)) {
+                int jumlah = new Integer(dtmodel.getValueAt(i, 2).toString());
+                dtmodel.setValueAt(jumlah + add , i, 2);
+            }
+        }   
     }
     
-    private void aktif(){
-        // enable button & textField
-        newBUTTON.setEnabled(false);
-        addBUTTON.setEnabled(true);
-        deleteBUTTON.setEnabled(true);
-        saveBUTTON.setEnabled(true);
-        cancelBUTTON.setEnabled(true);
-        //-------------------------------------
-        jumlahBarangText.setText("1");
-        jumlahBarangText.setEnabled(true);
-        kodeBarangText.setEnabled(false);
-        barangComboBox.setEnabled(true);
-    }
-    private void nonaktif(){
-        // disable button & textField
-        newBUTTON.setEnabled(true);
-        addBUTTON.setEnabled(false);
-        deleteBUTTON.setEnabled(false);
-        saveBUTTON.setEnabled(false);
-        cancelBUTTON.setEnabled(false);
-        //-------------------------------------
-        jumlahBarangText.setEnabled(false);
-        jumlahBarangText.setText("");
-        kodeBarangText.setEnabled(false);
-        kodeBarangText.setText("");
-        barangComboBox.setEnabled(false);
-        barangComboBox.setSelectedIndex(0);
-        DefaultTableModel model = (DefaultTableModel) tabelList.getModel();
-        while (model.getRowCount() > 0 ) {            
-            for (int i = 0; i < model.getRowCount(); i++) {
-                model.removeRow(i);
-            }
-        }
-        
-    }
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -444,15 +408,12 @@ public class FramePembelian extends javax.swing.JFrame {
     private javax.swing.JButton deleteBUTTON;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jumlahBarangText;
     private javax.swing.JTextField kodeBarangText;
-    private javax.swing.JMenu menuKeluar;
     private javax.swing.JButton newBUTTON;
     private javax.swing.JButton saveBUTTON;
-    private javax.swing.JTable tabelList;
+    private javax.swing.JTable tableitemlist;
     // End of variables declaration//GEN-END:variables
 }
