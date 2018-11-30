@@ -1,5 +1,6 @@
 package dzikri;
 
+import dzikri.FramePembelian;
 import java.util.*;
 
 /*

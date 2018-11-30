@@ -37,9 +37,9 @@ public class Transaksi {
         objek += "Kode\t\t : "+this.kode+"\n";
         objek += "Daftar Belanja :\n";
         for (Item item : this.items) {
-            objek += "\t"+item.getNama()+"(x "+item.getJumlah()+" : "+item.getTotal();
+            objek += "\t - "+item.getNama()+" "+item.getJumlah()+" "+item.getTotal();
         }
-        objek += "Total Harga : "+this.total;
+        objek += "\nTotal Harga : "+this.total;
         return objek;
     } 
 }

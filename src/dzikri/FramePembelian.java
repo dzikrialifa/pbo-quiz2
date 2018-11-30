@@ -20,7 +20,7 @@ public class FramePembelian extends javax.swing.JFrame {
 
     private int id = 0; // setting variable id untuk kode transaksi
     private String kode; // setting kode variable untuk kode transaksi
-    private DefaultTableModel tbModel; // model tabel
+    private DefaultTableModel dtmodel; // model tabel
     private DefaultComboBoxModel cbModel; // combo box model
     private ArrayList<Item> belanja = new ArrayList<>(); // variable untuk menampilkan daftar transaksi
     
@@ -30,7 +30,7 @@ public class FramePembelian extends javax.swing.JFrame {
         this.cbModel = new DefaultComboBoxModel<> (model.getNamaItem().toArray());
         
         TabelItem models = new TabelItem();
-        this.tbModel = new DefaultTableModel(models.getNamaKolom(), 0);
+        this.dtmodel = new DefaultTableModel(models.getNamaKolom(), 0);
         
         initComponents();
     }
@@ -208,8 +208,8 @@ public class FramePembelian extends javax.swing.JFrame {
     private boolean isDuplicate(String nama){
         boolean hasil = false;
         ArrayList<String> item = new ArrayList<>();
-        for (int i = 0; i < tbModel.getRowCount(); i++) {
-            item.add(tbModel.getValueAt(i, 0).toString());
+        for (int i = 0; i < dtmodel.getRowCount(); i++) {
+            item.add(dtmodel.getValueAt(i, 0).toString());
         }
         for (String index : item) {
             if (index.equals(nama)) {
@@ -248,18 +248,19 @@ public class FramePembelian extends javax.swing.JFrame {
         this.deleteBUTTON.setEnabled(false);
         this.jumlahBarangText.setEnabled(false);
         this.barangComboBox.setEnabled(false);
-        this.tbModel.setRowCount(0);
+        this.dtmodel.setRowCount(0);
         this.belanja.clear();
     }
     
     
     private void saveBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBUTTONActionPerformed
         try {
-            for (int i = 0; i < tbModel.getRowCount(); i++) {
+            for (int i = 0; i < dtmodel.getRowCount(); i++) {
                 // menyimpan nama barang dan jumlah 
-                String nama = tbModel.getValueAt(i, 0).toString();
-                float harga = new Float(tbModel.getValueAt(i, 1).toString()) ;
-                int jumlah  = new Integer(tbModel.getValueAt(i, 2).toString());
+                String nama = dtmodel.getValueAt(i, 0).toString();
+                float harga = new Float(dtmodel.getValueAt(i, 1).toString()) ;
+                int jumlah  = new Integer(dtmodel.getValueAt(i, 2).toString());
+                this.belanja.add(new Item(nama, jumlah, harga));
             }
             // instansiasi class Transaksi dengan kode dan comitted belanja
             Transaksi trnsksi = new Transaksi(this.kode, this.belanja);
@@ -281,10 +282,10 @@ public class FramePembelian extends javax.swing.JFrame {
         
         String nama = this.barangComboBox.getSelectedItem().toString();
         int jumlah = new Integer(this.jumlahBarangText.getText());
-        if (!isDuplicate(nama)) {
+        if (isDuplicate(nama)) {
             updateJumlah(nama, jumlah);
         } else {
-            tbModel.addRow(addItem(nama, jumlah));
+            dtmodel.addRow(addItem(nama, jumlah));
         }
         this.belanja();
         
@@ -298,7 +299,7 @@ public class FramePembelian extends javax.swing.JFrame {
             // jika ada baris yang dipilih
             int jumlah = tableitemlist.getSelectedRows().length;
             for (int i = 0; i < jumlah; i++) {
-                tbModel.removeRow(tableitemlist.getSelectedRow());
+                dtmodel.removeRow(tableitemlist.getSelectedRow());
             }
         }
         this.belanja();
@@ -343,7 +344,7 @@ public class FramePembelian extends javax.swing.JFrame {
     private Object[] addItem(String nama,int jumlah){
         float harga = 0;
         PriceComboModel item = new PriceComboModel();
-        for (int i = 0; i < item.getNamaItem().size() ; i++) {
+        for (int i = 0; i < item.getHargaItem().size() ; i++) {
             if (nama.equalsIgnoreCase(item.getNamaItem().get(i))) {
                 harga = item.getHargaItem().get(i);
             }
@@ -356,13 +357,13 @@ public class FramePembelian extends javax.swing.JFrame {
     // --- fungsi untuk update jumlah 
     private void updateJumlah(String nama,int add){
         ArrayList<String> item = new ArrayList<>();
-        for (int i = 0; i < tbModel.getRowCount(); i++) {
-            item.add(tbModel.getValueAt(i, 0).toString());
+        for (int i = 0; i < dtmodel.getRowCount(); i++) {
+            item.add(dtmodel.getValueAt(i, 0).toString());
         }
         for (int i = 0; i < item.size(); i++) {
             if (item.get(i).equals(nama)) {
-                int jumlah = new Integer(tbModel.getValueAt(i, 2).toString());
-                tbModel.setValueAt(jumlah + add , i, 2);
+                int jumlah = new Integer(dtmodel.getValueAt(i, 2).toString());
+                dtmodel.setValueAt(jumlah + add , i, 2);
             }
         }   
     }
@@ -390,6 +391,8 @@ public class FramePembelian extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FramePembelian.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
