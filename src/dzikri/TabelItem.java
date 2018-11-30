@@ -12,6 +12,7 @@ public class TabelItem extends DefaultTableModel {
     private String[] namaKolom;
 
     // -- default konstruktor untuk class TabelItem
+    // -- setting nama kolom tabel
     public TabelItem() {
         this.namaKolom = new String[]{
             "Nama","Harga","Jumlah"
