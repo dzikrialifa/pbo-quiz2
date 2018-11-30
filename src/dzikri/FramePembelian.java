@@ -20,17 +20,17 @@ public class FramePembelian extends javax.swing.JFrame {
 
     private int id = 0; // setting variable id untuk kode transaksi
     private String kode; // setting kode variable untuk kode transaksi
-    private DefaultTableModel dtmodel; // model tabel
-    private DefaultComboBoxModel dcbModel; // combo box model
+    private DefaultTableModel tbModel; // model tabel
+    private DefaultComboBoxModel cbModel; // combo box model
     private ArrayList<Item> belanja = new ArrayList<>(); // variable untuk menampilkan daftar transaksi
     
     
     public FramePembelian() {
         PriceComboModel model = new PriceComboModel();
-        this.dcbModel = new DefaultComboBoxModel<> (model.getNamaItem().toArray());
+        this.cbModel = new DefaultComboBoxModel<> (model.getNamaItem().toArray());
         
         TabelItem models = new TabelItem();
-        this.dtmodel = new DefaultTableModel(models.getNamaKolom(), 0);
+        this.tbModel = new DefaultTableModel(models.getNamaKolom(), 0);
         
         initComponents();
     }
@@ -208,8 +208,8 @@ public class FramePembelian extends javax.swing.JFrame {
     private boolean isDuplicate(String nama){
         boolean hasil = false;
         ArrayList<String> item = new ArrayList<>();
-        for (int i = 0; i < dtmodel.getRowCount(); i++) {
-            item.add(dtmodel.getValueAt(i, 0).toString());
+        for (int i = 0; i < tbModel.getRowCount(); i++) {
+            item.add(tbModel.getValueAt(i, 0).toString());
         }
         for (String index : item) {
             if (index.equals(nama)) {
@@ -248,18 +248,18 @@ public class FramePembelian extends javax.swing.JFrame {
         this.deleteBUTTON.setEnabled(false);
         this.jumlahBarangText.setEnabled(false);
         this.barangComboBox.setEnabled(false);
-        this.dtmodel.setRowCount(0);
+        this.tbModel.setRowCount(0);
         this.belanja.clear();
     }
     
     
     private void saveBUTTONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBUTTONActionPerformed
         try {
-            for (int i = 0; i < dtmodel.getRowCount(); i++) {
+            for (int i = 0; i < tbModel.getRowCount(); i++) {
                 // menyimpan nama barang dan jumlah 
-                String nama = dtmodel.getValueAt(i, 0).toString();
-                float harga = new Float(dtmodel.getValueAt(i, 1).toString()) ;
-                int jumlah  = new Integer(dtmodel.getValueAt(i, 2).toString());
+                String nama = tbModel.getValueAt(i, 0).toString();
+                float harga = new Float(tbModel.getValueAt(i, 1).toString()) ;
+                int jumlah  = new Integer(tbModel.getValueAt(i, 2).toString());
             }
             // instansiasi class Transaksi dengan kode dan comitted belanja
             Transaksi trnsksi = new Transaksi(this.kode, this.belanja);
@@ -284,7 +284,7 @@ public class FramePembelian extends javax.swing.JFrame {
         if (!isDuplicate(nama)) {
             updateJumlah(nama, jumlah);
         } else {
-            dtmodel.addRow(addItem(nama, jumlah));
+            tbModel.addRow(addItem(nama, jumlah));
         }
         this.belanja();
         
@@ -298,7 +298,7 @@ public class FramePembelian extends javax.swing.JFrame {
             // jika ada baris yang dipilih
             int jumlah = tableitemlist.getSelectedRows().length;
             for (int i = 0; i < jumlah; i++) {
-                dtmodel.removeRow(tableitemlist.getSelectedRow());
+                tbModel.removeRow(tableitemlist.getSelectedRow());
             }
         }
         this.belanja();
@@ -356,13 +356,13 @@ public class FramePembelian extends javax.swing.JFrame {
     // --- fungsi untuk update jumlah 
     private void updateJumlah(String nama,int add){
         ArrayList<String> item = new ArrayList<>();
-        for (int i = 0; i < dtmodel.getRowCount(); i++) {
-            item.add(dtmodel.getValueAt(i, 0).toString());
+        for (int i = 0; i < tbModel.getRowCount(); i++) {
+            item.add(tbModel.getValueAt(i, 0).toString());
         }
         for (int i = 0; i < item.size(); i++) {
             if (item.get(i).equals(nama)) {
-                int jumlah = new Integer(dtmodel.getValueAt(i, 2).toString());
-                dtmodel.setValueAt(jumlah + add , i, 2);
+                int jumlah = new Integer(tbModel.getValueAt(i, 2).toString());
+                tbModel.setValueAt(jumlah + add , i, 2);
             }
         }   
     }
